@@ -8,8 +8,13 @@ load_dotenv()
 
 class StartupValidator:
     def __init__(self):
-        # Get API key from environment
-        os.environ['GROQ_API_KEY'] = os.getenv('GROQ_API_KEY')
+        # Get API key from environment or Streamlit secrets
+        try:
+            import streamlit as st
+            api_key = st.secrets["GROQ_API_KEY"]
+        except Exception:
+            api_key = os.getenv('GROQ_API_KEY')
+        os.environ['GROQ_API_KEY'] = api_key
         
         # Initialize LLM models
         self.llm = ChatGroq(
